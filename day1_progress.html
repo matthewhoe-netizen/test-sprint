@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Day 1 Progress Form — Claude Transformation Sprint</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:#0D0D0D; --accent:#FF5733; --dark:#1A1A2E; --bg:#F5F4F0;
+  --white:#fff; --grey:#999; --line:#E0DED8; --amber:#F0A500; --green:#1A9E5F;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--dark);}
+.progress-bar{height:4px;background:#333;}
+.progress-fill{height:100%;background:var(--amber);transition:width 0.4s ease;width:0%;}
+.nav-inner{max-width:760px;margin:0 auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-title{color:var(--white);font-size:13px;}
+.nav-title span{color:var(--amber);font-weight:700;}
+.nav-count{color:rgba(255,255,255,0.35);font-size:12px;}
+
+.container{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+
+.hero{padding:48px 0 32px;}
+.hero-tag{font-size:10px;letter-spacing:3px;color:var(--amber);font-weight:700;margin-bottom:12px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.15;font-weight:normal;}
+.hero h1 em{font-style:italic;color:var(--grey);}
+.hero p{color:#666;font-size:14px;line-height:1.75;margin-top:14px;max-width:560px;}
+
+.section-header{display:flex;align-items:flex-start;gap:14px;margin:44px 0 20px;padding-top:20px;border-top:1px solid var(--line);}
+.section-num{background:var(--dark);color:var(--amber);font-weight:700;font-size:12px;padding:5px 9px;border-radius:3px;flex-shrink:0;margin-top:3px;}
+.section-title{font-size:19px;font-weight:700;}
+.section-sub{font-size:12px;color:var(--grey);margin-top:3px;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:22px 26px;margin-bottom:8px;}
+.field-wrap label{display:block;font-size:9px;letter-spacing:2.5px;color:var(--grey);font-weight:700;margin-bottom:8px;}
+.field-wrap input{width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;padding:6px 0;font-size:15px;font-family:'DM Serif Display',serif;color:var(--ink);outline:none;transition:border-color 0.2s;}
+.field-wrap input:focus{border-bottom-color:var(--amber);}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:20px 24px;margin-bottom:10px;transition:border-color 0.2s;}
+.card:focus-within{border-color:var(--amber);}
+.card label{display:block;font-size:13.5px;color:var(--ink);line-height:1.55;margin-bottom:12px;}
+.card textarea{width:100%;border:none;border-top:1px solid #F0EEE8;padding-top:12px;font-size:14px;font-family:'DM Serif Display',serif;color:var(--ink);background:transparent;resize:vertical;outline:none;line-height:1.8;min-height:72px;}
+.card textarea::placeholder{color:#bbb;font-style:italic;}
+
+/* PILL SELECTOR */
+.pill-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.pill-btn{padding:8px 16px;border-radius:100px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;border:1.5px solid var(--line);background:var(--white);color:#777;cursor:pointer;transition:all 0.15s;}
+.pill-btn:hover:not(.active){border-color:#aaa;color:var(--ink);}
+.pill-btn.active{border-color:var(--amber);background:var(--amber);color:var(--white);}
+.pill-btn.active.green{border-color:var(--green);background:var(--green);}
+.pill-btn.active.red{border-color:#E03010;background:#E03010;}
+
+/* TOGGLE */
+.toggle-group{display:flex;gap:10px;margin-top:4px;}
+.toggle-btn{flex:1;padding:11px;border-radius:6px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;border:1.5px solid var(--line);background:var(--white);color:#aaa;cursor:pointer;transition:all 0.15s;text-align:center;}
+.toggle-btn:hover:not(.active){border-color:#aaa;color:var(--ink);}
+.toggle-btn.active-yes{border-color:var(--amber);background:rgba(240,165,0,0.08);color:var(--amber);}
+.toggle-btn.active-no{border-color:var(--green);background:rgba(26,158,95,0.08);color:var(--green);}
+
+/* PIVOT REVEAL */
+.pivot-reveal{display:none;margin-top:14px;}
+.pivot-reveal.open{display:block;}
+.pivot-reveal textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:13.5px;font-family:'DM Serif Display',serif;color:var(--ink);outline:none;resize:none;background:var(--bg);transition:border-color 0.2s;line-height:1.75;}
+.pivot-reveal textarea:focus{border-color:var(--amber);}
+.pivot-reveal textarea::placeholder{color:#bbb;font-style:italic;}
+
+/* CONFIDENCE */
+.confidence-row{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.conf-end{font-size:11px;color:#bbb;}
+.conf-btn{width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;border:2px solid var(--line);background:var(--white);color:#aaa;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+.conf-btn:hover:not(.active){border-color:#aaa;color:var(--ink);}
+.conf-btn.active{background:var(--amber);border-color:var(--amber);color:var(--white);}
+
+/* SUBMIT */
+.submit-area{margin-top:44px;text-align:center;}
+.submit-btn{background:var(--amber);color:var(--white);border:none;border-radius:4px;padding:16px 52px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background 0.2s,transform 0.1s;}
+.submit-btn:hover{background:#D09000;}
+.submit-btn:active{transform:scale(0.98);}
+
+/* SUCCESS */
+#success-screen{display:none;min-height:100vh;background:var(--ink);align-items:center;justify-content:center;padding:40px 24px;}
+#success-screen.visible{display:flex;}
+.success-card{max-width:560px;width:100%;}
+.success-header{background:var(--amber);border-radius:6px 6px 0 0;padding:32px 40px 24px;}
+.success-tag{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.7);margin-bottom:10px;}
+.success-name{font-size:26px;color:var(--white);font-family:'DM Serif Display',serif;line-height:1.2;}
+.success-sub{font-size:14px;color:rgba(255,255,255,0.75);margin-top:8px;}
+.success-body{background:var(--dark);border-radius:0 0 6px 6px;padding:28px 40px;}
+.success-plan-tag{font-size:10px;letter-spacing:2.5px;color:var(--amber);margin-bottom:10px;font-weight:700;}
+.success-plan-text{color:#F5F4F0;font-family:'DM Serif Display',serif;font-size:16px;line-height:1.8;font-style:italic;}
+
+@media(max-width:600px){
+  .info-grid{grid-template-columns:1fr;}
+  .toggle-group{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div id="form-screen">
+  <div class="nav">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="nav-inner">
+      <div class="nav-title"><span>Day 1 Progress</span> · Due 18:35</div>
+      <div class="nav-count" id="count">0% complete</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-tag">DAY 1 EOD · SUBMIT BY 18:35</div>
+      <h1>How Did<br><em>Day 1 Go?</em></h1>
+      <p>Quick check-in before you leave. Tell us what you built, what got hard, and what your plan is for tomorrow. Takes under 10 minutes.</p>
+    </div>
+
+    <!-- S1: TEAM INFO -->
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div><div class="section-title">Team Info</div></div>
+    </div>
+    <div class="info-grid">
+      <div class="field-wrap">
+        <label>TEAM LEAD NAME</label>
+        <input type="text" id="f-lead" placeholder="Full name" oninput="updateProgress()"/>
+      </div>
+      <div class="field-wrap">
+        <label>TEAM / DEPARTMENT</label>
+        <input type="text" id="f-team" placeholder="e.g. SPX Last Mile, WH Inventory" oninput="updateProgress()"/>
+      </div>
+    </div>
+
+    <!-- S2: WHAT YOU BUILT -->
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="section-title">What You Built Today</div>
+        <div class="section-sub">Be honest — progress is progress, even if it's messy.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Which process did you work on today?</label>
+      <textarea id="q-process" rows="2" placeholder="Name the process — it's ok if it changed from your brainstorm form..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>How far did you get?</label>
+      <div class="pill-group" id="progress-pills">
+        <button type="button" class="pill-btn" data-val="Just started">Just started</button>
+        <button type="button" class="pill-btn" data-val="Got a working draft">Got a working draft</button>
+        <button type="button" class="pill-btn" data-val="Mostly done">Mostly done</button>
+        <button type="button" class="pill-btn active green" data-val="Demo-ready">Demo-ready 🎉</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Describe what you built — what goes in, what comes out, does it work?</label>
+      <textarea id="q-built" rows="3" placeholder="e.g. A Claude prompt that takes our weekly ops data CSV and outputs a formatted summary with flags for anomalies. Works on test data, needs real data validation..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Biggest win of Day 1 — one thing that went better than expected.</label>
+      <textarea id="q-win" rows="2" placeholder="e.g. Claude handled edge cases we didn't expect, team got aligned much faster than usual..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <!-- S3: WHAT GOT HARD -->
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div>
+        <div class="section-title">What Got Hard</div>
+        <div class="section-sub">No shame — every team hits walls.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Biggest blocker or challenge today.</label>
+      <textarea id="q-blocker" rows="2" placeholder="e.g. Couldn't get Claude to handle multi-language inputs consistently, data access issues..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Did you need to change your original plan from the brainstorm form?</label>
+      <div class="toggle-group">
+        <button type="button" class="toggle-btn" id="pivot-yes" onclick="setPivot('yes')">Yes, we pivoted</button>
+        <button type="button" class="toggle-btn" id="pivot-no"  onclick="setPivot('no')">No, stayed on track</button>
+      </div>
+      <div class="pivot-reveal" id="pivot-detail">
+        <textarea id="q-pivot" rows="2" placeholder="What changed and why?"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Confidence level going into Day 2 — how likely is your team to have something demo-ready?</label>
+      <div class="confidence-row">
+        <span class="conf-end">Not confident</span>
+        <button type="button" class="conf-btn" data-val="1" onclick="setConf(1)">1</button>
+        <button type="button" class="conf-btn" data-val="2" onclick="setConf(2)">2</button>
+        <button type="button" class="conf-btn" data-val="3" onclick="setConf(3)">3</button>
+        <button type="button" class="conf-btn" data-val="4" onclick="setConf(4)">4</button>
+        <button type="button" class="conf-btn" data-val="5" onclick="setConf(5)">5</button>
+        <span class="conf-end">Very confident</span>
+      </div>
+    </div>
+
+    <!-- S4: DAY 2 PLAN -->
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div>
+        <div class="section-title">Day 2 Plan</div>
+        <div class="section-sub">What are you finishing tomorrow?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>What specifically will you finish tomorrow?</label>
+      <textarea id="q-plan" rows="3" placeholder="Be specific — list the 2-3 things that need to be done for this to be demo-ready by 16:00..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>What does "demo-ready" look like for your team by EOD Day 2?</label>
+      <textarea id="q-demo" rows="2" placeholder="e.g. We can run it live on real data and show a 10-min before/after comparison..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Anything you need from Shaowen or the facilitators before Day 2?</label>
+      <textarea id="q-help" rows="2" placeholder="e.g. Access to X system, clarification on scope, pairing with another team..."></textarea>
+    </div>
+
+    <div class="submit-area">
+      <button type="button" class="submit-btn" onclick="handleSubmit()">SUBMIT &#x2192;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="success-card">
+    <div class="success-header">
+      <div class="success-tag">SUBMITTED ✓</div>
+      <div class="success-name" id="s-name">See you tomorrow.</div>
+      <div class="success-sub">Rest up — Day 2 is build time.</div>
+    </div>
+    <div class="success-body">
+      <div class="success-plan-tag">YOUR DAY 2 PLAN</div>
+      <div class="success-plan-text" id="s-plan"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHEETS_URL = 'https://script.google.com/a/macros/shopee.com/s/AKfycbxQjdQSg_gywsi5xEbn1ID5FOZDXVQNUvugJWR0OCToKpnz5u7Pwgwv1fAqUt3XQj7i/exec';
+var progressPill = null;
+var pivotVal     = null;
+var confVal      = null;
+
+// Progress pills
+document.getElementById('progress-pills').querySelectorAll('.pill-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.getElementById('progress-pills').querySelectorAll('.pill-btn').forEach(function(b) {
+      b.classList.remove('active', 'green', 'red');
+    });
+    btn.classList.add('active');
+    var val = btn.dataset.val;
+    if (val === 'Demo-ready') btn.classList.add('green');
+    else if (val === 'Just started') btn.classList.add('red');
+    progressPill = val;
+    updateProgress();
+  });
+});
+
+// Remove default active on load so user must choose
+document.getElementById('progress-pills').querySelectorAll('.pill-btn').forEach(function(b) {
+  b.classList.remove('active', 'green', 'red');
+});
+
+function setPivot(val) {
+  pivotVal = val;
+  document.getElementById('pivot-yes').className = 'toggle-btn' + (val === 'yes' ? ' active-yes' : '');
+  document.getElementById('pivot-no').className  = 'toggle-btn' + (val === 'no'  ? ' active-no'  : '');
+  var detail = document.getElementById('pivot-detail');
+  detail.classList.toggle('open', val === 'yes');
+  updateProgress();
+}
+
+function setConf(val) {
+  confVal = val;
+  document.querySelectorAll('.conf-btn').forEach(function(btn) {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) === val);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  var score = 0;
+  if ((document.getElementById('f-lead').value    || '').trim()) score++;
+  if ((document.getElementById('f-team').value    || '').trim()) score++;
+  if ((document.getElementById('q-process').value || '').trim()) score++;
+  if ((document.getElementById('q-built').value   || '').trim()) score++;
+  if (progressPill)                                               score++;
+  if (pivotVal)                                                   score++;
+  if (confVal)                                                    score++;
+  if ((document.getElementById('q-plan').value    || '').trim()) score++;
+  var pct = Math.round(score / 8 * 100);
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('count').textContent = pct + '% complete';
+}
+
+function handleSubmit() {
+  var lead = document.getElementById('f-lead').value || 'Team Lead';
+  var plan = document.getElementById('q-plan').value || '';
+
+  var payload = {
+    lead:        document.getElementById('f-lead').value,
+    team:        document.getElementById('f-team').value,
+    process:     document.getElementById('q-process').value,
+    progressPill: progressPill || '',
+    built:       document.getElementById('q-built').value,
+    win:         document.getElementById('q-win').value,
+    blocker:     document.getElementById('q-blocker').value,
+    pivoted:     pivotVal || '',
+    pivotDetail: document.getElementById('q-pivot').value,
+    confidence:  confVal || '',
+    plan:        plan,
+    demoReady:   document.getElementById('q-demo').value,
+    needHelp:    document.getElementById('q-help').value
+  };
+
+  fetch(SHEETS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function() {});
+
+  document.getElementById('form-screen').style.display = 'none';
+  document.getElementById('success-screen').classList.add('visible');
+  document.getElementById('s-name').textContent = 'Thanks, ' + lead + '. See you tomorrow.';
+  document.getElementById('s-plan').innerHTML = plan
+    ? ('\u201C' + plan + '\u201D')
+    : '<em style="opacity:0.4">No plan submitted.</em>';
+}
+</script>
+</body>
+</html>

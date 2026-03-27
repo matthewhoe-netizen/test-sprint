@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Team Brainstorm Form — Claude Transformation Sprint</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:#0D0D0D; --accent:#FF5733; --dark:#1A1A2E; --bg:#F5F4F0;
+  --white:#fff; --grey:#999; --line:#E0DED8; --amber:#F0A500; --green:#1A9E5F;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;}
+.nav{position:sticky;top:0;z-index:100;background:var(--dark);}
+.progress-bar{height:4px;background:#333;}
+.progress-fill{height:100%;background:var(--accent);transition:width 0.4s ease;width:0%;}
+.nav-inner{max-width:800px;margin:0 auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-title{color:var(--white);font-size:13px;}
+.nav-title span{color:var(--accent);font-weight:700;}
+.nav-count{color:rgba(255,255,255,0.35);font-size:12px;}
+.container{max-width:800px;margin:0 auto;padding:0 24px 80px;}
+.hero{padding:48px 0 32px;}
+.hero-tag{font-size:10px;letter-spacing:3px;color:var(--accent);font-weight:700;margin-bottom:12px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.15;font-weight:normal;}
+.hero h1 em{font-style:italic;color:var(--grey);}
+.hero p{color:#666;font-size:14px;line-height:1.75;margin-top:14px;max-width:580px;}
+.section-header{display:flex;align-items:flex-start;gap:14px;margin:44px 0 20px;padding-top:20px;border-top:1px solid var(--line);}
+.section-num{background:var(--dark);color:var(--accent);font-weight:700;font-size:12px;padding:5px 9px;border-radius:3px;flex-shrink:0;margin-top:3px;}
+.section-title{font-size:19px;font-weight:700;}
+.section-sub{font-size:12px;color:var(--grey);margin-top:3px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:22px 26px;margin-bottom:8px;}
+.field-wrap label{display:block;font-size:9px;letter-spacing:2.5px;color:var(--grey);font-weight:700;margin-bottom:8px;}
+.field-wrap input{width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;padding:6px 0;font-size:15px;font-family:'DM Serif Display',serif;color:var(--ink);outline:none;transition:border-color 0.2s;}
+.field-wrap input:focus{border-bottom-color:var(--accent);}
+.process-list{display:flex;flex-direction:column;gap:12px;}
+.process-card{background:var(--white);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+.process-card-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.process-card-num{font-size:11px;letter-spacing:2px;color:var(--white);font-weight:700;}
+.process-card-remove{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:22px;line-height:1;padding:0;transition:color 0.15s;}
+.process-card-remove:hover{color:var(--white);}
+.process-card-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.process-card-body .full{grid-column:1/-1;}
+.pc-field label{display:block;font-size:9px;letter-spacing:2px;color:var(--grey);font-weight:700;margin-bottom:6px;}
+.pc-field input,.pc-field textarea{width:100%;border:none;border-bottom:1.5px solid var(--line);background:transparent;padding:5px 0;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;resize:none;}
+.pc-field input:focus,.pc-field textarea:focus{border-bottom-color:var(--accent);}
+.rating-row-inline{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.rating-row-inline button{width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;border:2px solid var(--line);background:var(--white);color:#aaa;transition:all 0.15s;}
+.rating-row-inline button.sel-ease{background:var(--accent);border-color:var(--accent);color:var(--white);}
+.rating-row-inline button.sel-impact{background:var(--amber);border-color:var(--amber);color:var(--white);}
+.rating-row-inline button:hover:not(.sel-ease):not(.sel-impact){border-color:#aaa;color:var(--ink);}
+.add-process-btn{display:flex;align-items:center;gap:8px;padding:13px 18px;background:transparent;border:2px dashed var(--line);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--grey);font-family:'DM Sans',sans-serif;transition:all 0.2s;width:100%;margin-top:4px;}
+.add-process-btn:hover{border-color:var(--accent);color:var(--accent);}
+.matrix-hint{font-size:12px;color:#888;margin-bottom:12px;line-height:1.6;}
+.matrix-container{position:relative;width:100%;padding-bottom:55%;background:var(--white);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+.matrix-zone{position:absolute;top:0;right:0;width:50%;height:50%;background:rgba(26,158,95,0.07);border-left:1.5px dashed rgba(26,158,95,0.35);border-bottom:1.5px dashed rgba(26,158,95,0.35);}
+.matrix-zone-label{position:absolute;top:8px;right:10px;font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--green);}
+.axis-label-x{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--grey);}
+.axis-label-y{position:absolute;top:50%;left:8px;transform:translateY(-50%) rotate(-90deg);font-size:10px;letter-spacing:1.5px;font-weight:700;color:var(--grey);white-space:nowrap;}
+.empty-matrix-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#bbb;text-align:center;pointer-events:none;line-height:1.6;}
+.dot{position:absolute;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--white);cursor:grab;transform:translate(-50%,-50%);user-select:none;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.dot:active{cursor:grabbing;}
+.dot-label{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:600;color:var(--ink);background:var(--white);padding:2px 7px;border-radius:3px;border:1px solid var(--line);pointer-events:none;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+.commit-card{background:var(--dark);border-radius:8px;padding:28px;margin-top:8px;}
+.commit-hint{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:22px;line-height:1.6;}
+.commit-card label{display:block;font-size:9px;letter-spacing:2.5px;color:rgba(255,255,255,0.4);font-weight:700;margin-bottom:8px;margin-top:20px;}
+.commit-card label:first-of-type{margin-top:0;}
+.commit-card input,.commit-card textarea,.commit-card select{width:100%;border:none;border-bottom:2px solid rgba(255,255,255,0.15);background:transparent;padding:7px 0;font-size:14px;font-family:'DM Serif Display',serif;color:var(--white);outline:none;transition:border-color 0.2s;resize:none;}
+.commit-card input:focus,.commit-card textarea:focus,.commit-card select:focus{border-bottom-color:var(--accent);}
+.commit-card select option{background:var(--dark);}
+.commit-card ::placeholder{color:rgba(255,255,255,0.2);font-style:italic;}
+.submit-area{margin-top:44px;text-align:center;}
+.submit-btn{background:var(--accent);color:var(--white);border:none;border-radius:4px;padding:16px 52px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background 0.2s,transform 0.1s;}
+.submit-btn:hover{background:#e04520;}
+.submit-btn:active{transform:scale(0.98);}
+#success-screen{display:none;min-height:100vh;background:var(--ink);align-items:center;justify-content:center;padding:40px 24px;}
+#success-screen.visible{display:flex;}
+.success-card{max-width:560px;width:100%;}
+.success-header{background:var(--accent);border-radius:6px 6px 0 0;padding:32px 40px 24px;}
+.success-tag{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.65);margin-bottom:10px;}
+.success-name{font-size:28px;color:var(--white);font-family:'DM Serif Display',serif;line-height:1.2;}
+.success-body{background:var(--dark);border-radius:0 0 6px 6px;padding:28px 40px;}
+.success-commit-tag{font-size:10px;letter-spacing:2.5px;color:var(--accent);margin-bottom:12px;font-weight:700;}
+.success-commit-text{color:#F5F4F0;font-family:'DM Serif Display',serif;font-size:16px;line-height:1.75;}
+@media(max-width:600px){
+  .info-grid{grid-template-columns:1fr;}
+  .process-card-body{grid-template-columns:1fr;}
+  .process-card-body .full{grid-column:1;}
+}
+
+.commit-item{background:var(--dark);border-radius:8px;padding:20px 24px;margin-bottom:10px;}
+.commit-item-header{display:flex;align-items:center;gap:12px;cursor:pointer;}
+.commit-checkbox{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+.commit-item-name{font-size:14px;font-weight:700;}
+.commit-item-body{display:none;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;}
+.commit-item-body.open{display:grid;}
+.commit-item-body .full{grid-column:1/-1;}
+.ci-label{display:block;font-size:9px;letter-spacing:2.5px;color:rgba(255,255,255,0.35);font-weight:700;margin-bottom:7px;}
+.commit-item-body input,.commit-item-body textarea{width:100%;border:none;border-bottom:2px solid rgba(255,255,255,0.12);background:transparent;padding:6px 0;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--white);outline:none;transition:border-color 0.2s;resize:none;}
+.commit-item-body input:focus,.commit-item-body textarea:focus{border-bottom-color:var(--accent);}
+.commit-item-body input::placeholder,.commit-item-body textarea::placeholder{color:rgba(255,255,255,0.2);font-style:italic;}
+</style>
+</head>
+<body>
+
+<div id="form-screen">
+  <div class="nav">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="nav-inner">
+      <div class="nav-title"><span>Team Brainstorm</span> &middot; Day 1 &middot; Due 12:30</div>
+      <div class="nav-count" id="count">0% complete</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-tag">DAY 1 &middot; SUBMIT BY 12:30</div>
+      <h1>What Will Your Team<br><em>Build This Sprint?</em></h1>
+      <p>Fill this in together as a team. List your automation candidates, rate each on ease and impact, drag them on the matrix to prioritise, then commit to what you're building.</p>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div><div class="section-title">Team Info</div></div>
+    </div>
+    <div class="info-grid">
+      <div class="field-wrap">
+        <label>TEAM LEAD NAME</label>
+        <input type="text" id="f-lead" placeholder="Full name" oninput="updateProgress()"/>
+      </div>
+      <div class="field-wrap">
+        <label>TEAM / DEPARTMENT</label>
+        <input type="text" id="f-team" placeholder="e.g. SPX Last Mile, WH Inventory" oninput="updateProgress()"/>
+      </div>
+      <div class="field-wrap">
+        <label>TEAM SIZE</label>
+        <input type="text" id="f-size" placeholder="e.g. 6 people" oninput="updateProgress()"/>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="section-title">Automation Candidates</div>
+        <div class="section-sub">List up to 5 processes. Rate ease and impact — this feeds the matrix below.</div>
+      </div>
+    </div>
+    <div class="process-list" id="process-list"></div>
+    <button type="button" class="add-process-btn" id="add-btn" onclick="addProcess()">
+      <span style="font-size:20px;line-height:1;margin-right:4px;">+</span> Add a process
+    </button>
+
+    <!-- SECTION 3 -->
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div>
+        <div class="section-title">Ease vs Impact Matrix</div>
+        <div class="section-sub">Processes appear as dots when added above. Drag to fine-tune placement as a team.</div>
+      </div>
+    </div>
+    <p class="matrix-hint">The <strong style="color:var(--green);">green zone (top-right)</strong> = high impact + easy to build. That's your priority. Rate ease &amp; impact in Section 2 and the dots auto-position — then drag to discuss.</p>
+    <div class="matrix-container" id="matrix">
+      <div class="matrix-zone">
+        <div class="matrix-zone-label">BUILD FIRST &#x2197;</div>
+      </div>
+      <div class="axis-label-x">EASE &#x2192;</div>
+      <div class="axis-label-y">IMPACT &#x2191;</div>
+      <div class="empty-matrix-msg" id="matrix-empty">Add processes above<br>and they'll appear here</div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div>
+        <div class="section-title">What You're Committing to Build</div>
+        <div class="section-sub">Select all the processes your team will build. Fill in owner, definition of done, and blockers for each.</div>
+      </div>
+    </div>
+    <div id="commit-list">
+      <p style="font-size:13px;color:#888;font-style:italic;">Add processes in Section 2 — they'll appear here for you to commit to.</p>
+    </div>
+
+    <div class="submit-area">
+      <button type="button" class="submit-btn" onclick="handleSubmit()">SUBMIT &#x2192;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="success-card">
+    <div class="success-header">
+      <div class="success-tag">SUBMITTED &#x2713;</div>
+      <div class="success-name" id="s-name">Team locked in. Good luck.</div>
+    </div>
+    <div class="success-body">
+      <div class="success-commit-tag">YOUR TEAM'S COMMITMENT</div>
+      <div class="success-commit-text" id="s-commit"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHEETS_URL = 'https://script.google.com/a/macros/shopee.com/s/AKfycbxbNghmUlww8bhEWNeujZqi-9bQMINuTIt4uJlXMNrBIiO6TmEpUuQ8LjOtCuJn8wSd8g/exec';
+var DOT_COLORS = ['#FF5733','#F0A500','#1A9E5F','#5080E0','#9B59B6'];
+var processes = [];
+var dotPositions = {};
+
+function addProcess() {
+  if (processes.length >= 5) return;
+  processes.push({ name:'', owner:'', hours:'', why:'', ease:null, impact:null });
+  renderProcessCards();
+  renderDots();
+  updateCommitSelect();
+  updateProgress();
+  if (processes.length >= 5) {
+    document.getElementById('add-btn').style.display = 'none';
+  }
+}
+
+function removeProcess(idx) {
+  processes.splice(idx, 1);
+  delete dotPositions[idx];
+  var newPos = {};
+  Object.keys(dotPositions).forEach(function(k) {
+    var ki = parseInt(k);
+    if (ki > idx) newPos[ki - 1] = dotPositions[k];
+    else if (ki < idx) newPos[ki] = dotPositions[k];
+  });
+  dotPositions = newPos;
+  renderProcessCards();
+  renderDots();
+  updateCommitSelect();
+  updateProgress();
+  document.getElementById('add-btn').style.display = '';
+}
+
+function makeInputField(extraClass, labelText, placeholder, value, onInputFn) {
+  var wrap = document.createElement('div');
+  wrap.className = 'pc-field' + (extraClass ? ' ' + extraClass : '');
+  var lbl = document.createElement('label');
+  lbl.textContent = labelText;
+  var el = document.createElement('input');
+  el.type = 'text';
+  el.placeholder = placeholder;
+  el.value = value;
+  el.oninput = function() { onInputFn(this.value); };
+  wrap.appendChild(lbl);
+  wrap.appendChild(el);
+  return wrap;
+}
+
+function makeTextareaField(extraClass, labelText, placeholder, value, onInputFn) {
+  var wrap = document.createElement('div');
+  wrap.className = 'pc-field' + (extraClass ? ' ' + extraClass : '');
+  var lbl = document.createElement('label');
+  lbl.textContent = labelText;
+  var el = document.createElement('textarea');
+  el.rows = 2;
+  el.placeholder = placeholder;
+  el.value = value;
+  el.oninput = function() { onInputFn(this.value); };
+  wrap.appendChild(lbl);
+  wrap.appendChild(el);
+  return wrap;
+}
+
+function renderProcessCards() {
+  var list = document.getElementById('process-list');
+  list.innerHTML = '';
+
+  processes.forEach(function(p, i) {
+    var card = document.createElement('div');
+    card.className = 'process-card';
+
+    // Header
+    var header = document.createElement('div');
+    header.className = 'process-card-header';
+    header.style.background = DOT_COLORS[i];
+
+    var numEl = document.createElement('div');
+    numEl.className = 'process-card-num';
+    numEl.textContent = 'PROCESS ' + (i + 1);
+    header.appendChild(numEl);
+
+    var removeBtn = document.createElement('button');
+    removeBtn.className = 'process-card-remove';
+    removeBtn.type = 'button';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Remove';
+    (function(capturedIdx) {
+      removeBtn.onclick = function() { removeProcess(capturedIdx); };
+    })(i);
+    header.appendChild(removeBtn);
+    card.appendChild(header);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'process-card-body';
+
+    (function(capturedIdx) {
+      body.appendChild(makeInputField('full', 'PROCESS NAME', 'e.g. Weekly ops report, Invoice reconciliation...', p.name, function(v) {
+        processes[capturedIdx].name = v; renderDots(); updateCommitSelect(); updateProgress();
+      }));
+      body.appendChild(makeInputField('', 'OWNER (WHO DOES THIS NOW)', 'Name or role', p.owner, function(v) {
+        processes[capturedIdx].owner = v; updateProgress();
+      }));
+      body.appendChild(makeInputField('', 'HOURS / WEEK (TEAM TOTAL)', 'e.g. 4 hrs', p.hours, function(v) {
+        processes[capturedIdx].hours = v; updateProgress();
+      }));
+      body.appendChild(makeTextareaField('full', 'WHY IS THIS A GOOD AUTOMATION CANDIDATE?', 'Repetitive? Clear inputs/outputs? High error rate?...', p.why, function(v) {
+        processes[capturedIdx].why = v; updateProgress();
+      }));
+    })(i);
+
+    // Ease rating
+    var easeWrap = document.createElement('div');
+    easeWrap.className = 'pc-field';
+    var easeLbl = document.createElement('label');
+    easeLbl.textContent = 'EASE (1 = hard, 5 = easy)';
+    var easeRow = document.createElement('div');
+    easeRow.className = 'rating-row-inline';
+    easeRow.id = 'ease-' + i;
+    [1,2,3,4,5].forEach(function(n) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = n;
+      if (p.ease === n) btn.classList.add('sel-ease');
+      (function(capturedIdx, capturedN) {
+        btn.onclick = function() {
+          processes[capturedIdx].ease = capturedN;
+          document.getElementById('ease-' + capturedIdx).querySelectorAll('button').forEach(function(b) { b.classList.remove('sel-ease'); });
+          this.classList.add('sel-ease');
+          syncDotFromRatings(capturedIdx);
+          updateProgress();
+        };
+      })(i, n);
+      easeRow.appendChild(btn);
+    });
+    easeWrap.appendChild(easeLbl);
+    easeWrap.appendChild(easeRow);
+    body.appendChild(easeWrap);
+
+    // Impact rating
+    var impactWrap = document.createElement('div');
+    impactWrap.className = 'pc-field';
+    var impactLbl = document.createElement('label');
+    impactLbl.textContent = 'IMPACT (1 = low, 5 = high)';
+    var impactRow = document.createElement('div');
+    impactRow.className = 'rating-row-inline';
+    impactRow.id = 'impact-' + i;
+    [1,2,3,4,5].forEach(function(n) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = n;
+      if (p.impact === n) btn.classList.add('sel-impact');
+      (function(capturedIdx, capturedN) {
+        btn.onclick = function() {
+          processes[capturedIdx].impact = capturedN;
+          document.getElementById('impact-' + capturedIdx).querySelectorAll('button').forEach(function(b) { b.classList.remove('sel-impact'); });
+          this.classList.add('sel-impact');
+          syncDotFromRatings(capturedIdx);
+          updateProgress();
+        };
+      })(i, n);
+      impactRow.appendChild(btn);
+    });
+    impactWrap.appendChild(impactLbl);
+    impactWrap.appendChild(impactRow);
+    body.appendChild(impactWrap);
+
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function syncDotFromRatings(i) {
+  var p = processes[i];
+  if (p.ease !== null && p.impact !== null) {
+    var matrix = document.getElementById('matrix');
+    var w = matrix.offsetWidth;
+    var h = matrix.offsetHeight;
+    var pxL = 40 + (p.ease - 1) / 4 * (w - 80);
+    var pxT = (h - 40) - (p.impact - 1) / 4 * (h - 80);
+    dotPositions[i] = { x: pxL / w * 100, y: pxT / h * 100 };
+    renderDots();
+  }
+}
+
+function renderDots() {
+  var matrix = document.getElementById('matrix');
+  matrix.querySelectorAll('.dot').forEach(function(d) { d.remove(); });
+  var emptyMsg = document.getElementById('matrix-empty');
+  if (processes.length === 0) {
+    if (emptyMsg) emptyMsg.style.display = '';
+    return;
+  }
+  if (emptyMsg) emptyMsg.style.display = 'none';
+
+  processes.forEach(function(p, i) {
+    var pos = dotPositions[i] || { x: 15 + i * 14, y: 75 - i * 10 };
+    var dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.background = DOT_COLORS[i];
+    dot.style.left = pos.x + '%';
+    dot.style.top = pos.y + '%';
+    dot.textContent = i + 1;
+    var label = document.createElement('div');
+    label.className = 'dot-label';
+    label.textContent = p.name || ('Process ' + (i + 1));
+    dot.appendChild(label);
+    makeDraggable(dot, i);
+    matrix.appendChild(dot);
+  });
+}
+
+function makeDraggable(dot, idx) {
+  var dragging = false;
+  var startX, startY, startLeft, startTop;
+
+  dot.addEventListener('mousedown', function(e) {
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    var matrix = document.getElementById('matrix');
+    var rect = matrix.getBoundingClientRect();
+    var pos = dotPositions[idx] || { x: parseFloat(dot.style.left), y: parseFloat(dot.style.top) };
+    startLeft = pos.x / 100 * rect.width;
+    startTop  = pos.y / 100 * rect.height;
+    e.preventDefault();
+  });
+
+  dot.addEventListener('touchstart', function(e) {
+    dragging = true;
+    var t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    var matrix = document.getElementById('matrix');
+    var rect = matrix.getBoundingClientRect();
+    var pos = dotPositions[idx] || { x: parseFloat(dot.style.left), y: parseFloat(dot.style.top) };
+    startLeft = pos.x / 100 * rect.width;
+    startTop  = pos.y / 100 * rect.height;
+    e.preventDefault();
+  }, { passive: false });
+
+  function onMove(cx, cy) {
+    if (!dragging) return;
+    var matrix = document.getElementById('matrix');
+    var rect = matrix.getBoundingClientRect();
+    var newLeft = Math.max(18, Math.min(rect.width  - 18, startLeft + (cx - startX)));
+    var newTop  = Math.max(18, Math.min(rect.height - 18, startTop  + (cy - startY)));
+    dotPositions[idx] = { x: newLeft / rect.width * 100, y: newTop / rect.height * 100 };
+    dot.style.left = dotPositions[idx].x + '%';
+    dot.style.top  = dotPositions[idx].y + '%';
+  }
+
+  document.addEventListener('mousemove', function(e) { onMove(e.clientX, e.clientY); });
+  document.addEventListener('touchmove', function(e) { onMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+  document.addEventListener('mouseup',   function() { dragging = false; });
+  document.addEventListener('touchend',  function() { dragging = false; });
+}
+
+function updateCommitSelect() {
+  renderCommitCards();
+}
+
+function renderCommitCards() {
+  var container = document.getElementById('commit-list');
+  if (processes.length === 0) {
+    container.innerHTML = '<p style="font-size:13px;color:#888;font-style:italic;">Add processes in Section 2 — they will appear here for you to commit to.</p>';
+    return;
+  }
+  var existing = {};
+  container.querySelectorAll('.commit-item').forEach(function(item) {
+    var idx = item.dataset.idx;
+    var cb = item.querySelector('.commit-checkbox');
+    existing[idx] = {
+      checked:  cb ? cb.checked : false,
+      owner:    (item.querySelector('.ci-owner')    || {}).value || '',
+      done:     (item.querySelector('.ci-done')     || {}).value || '',
+      blockers: (item.querySelector('.ci-blockers') || {}).value || ''
+    };
+  });
+
+  container.innerHTML = '';
+  processes.forEach(function(p, i) {
+    var saved = existing[i] || {};
+    var item = document.createElement('div');
+    item.className = 'commit-item';
+    item.dataset.idx = i;
+
+    var hdr = document.createElement('div');
+    hdr.className = 'commit-item-header';
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'commit-checkbox';
+    cb.checked = saved.checked || false;
+    var nameSpan = document.createElement('div');
+    nameSpan.className = 'commit-item-name';
+    nameSpan.style.color = DOT_COLORS[i];
+    nameSpan.textContent = p.name || ('Process ' + (i + 1));
+    hdr.appendChild(cb);
+    hdr.appendChild(nameSpan);
+    item.appendChild(hdr);
+
+    var body = document.createElement('div');
+    body.className = 'commit-item-body' + (cb.checked ? ' open' : '');
+
+    function makeCommitField(cls, labelText, isTA, placeholder, savedVal, fullWidth) {
+      var wrap = document.createElement('div');
+      if (fullWidth) wrap.className = 'full';
+      var lbl = document.createElement('span');
+      lbl.className = 'ci-label';
+      lbl.textContent = labelText;
+      var el;
+      if (isTA) {
+        el = document.createElement('textarea');
+        el.rows = 2;
+        el.value = savedVal || '';
+      } else {
+        el = document.createElement('input');
+        el.type = 'text';
+        el.value = savedVal || '';
+      }
+      el.className = cls;
+      el.placeholder = placeholder;
+      el.addEventListener('input', updateProgress);
+      wrap.appendChild(lbl);
+      wrap.appendChild(el);
+      return wrap;
+    }
+
+    body.appendChild(makeCommitField('ci-owner', 'WHO IS BUILDING IT', false, 'Name(s) of the builder(s)', saved.owner, false));
+    body.appendChild(makeCommitField('ci-done', 'WHAT DOES "DONE" LOOK LIKE BY EOD DAY 2?', true, 'What will be working, what goes in, what comes out...', saved.done, true));
+    body.appendChild(makeCommitField('ci-blockers', 'BLOCKERS OR THINGS YOU NEED HELP WITH?', true, 'e.g. need access to X system, unsure how to handle Y...', saved.blockers, true));
+
+    item.appendChild(body);
+    container.appendChild(item);
+
+    cb.addEventListener('change', function() {
+      body.classList.toggle('open', cb.checked);
+      updateProgress();
+    });
+  });
+}
+
+function getCommits() {
+  var commits = [];
+  document.querySelectorAll('.commit-item').forEach(function(item) {
+    var cb = item.querySelector('.commit-checkbox');
+    if (cb && cb.checked) {
+      var idx = parseInt(item.dataset.idx);
+      commits.push({
+        processName: processes[idx] ? processes[idx].name : '',
+        owner:    (item.querySelector('.ci-owner')    || {}).value || '',
+        done:     (item.querySelector('.ci-done')     || {}).value || '',
+        blockers: (item.querySelector('.ci-blockers') || {}).value || ''
+      });
+    }
+  });
+  return commits;
+}
+
+function updateProgress() {
+  var lead = document.getElementById('f-lead').value.trim();
+  var team = document.getElementById('f-team').value.trim();
+  var commits = getCommits();
+  var score = 0;
+  if (lead) score++;
+  if (team) score++;
+  if (processes.length > 0) score++;
+  if (commits.length > 0) score++;
+  if (commits.length > 0 && commits[0].owner) score++;
+  if (commits.length > 0 && commits[0].done)  score++;
+  var pct = Math.round(score / 6 * 100);
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('count').textContent = pct + '% complete';
+}
+
+function handleSubmit() {
+  var lead = document.getElementById('f-lead').value || 'Team Lead';
+  var commits = getCommits();
+  var payload = {
+    lead:     document.getElementById('f-lead').value,
+    team:     document.getElementById('f-team').value,
+    teamSize: document.getElementById('f-size').value,
+    processes: processes.map(function(p, i) {
+      return { name:p.name, owner:p.owner, hours:p.hours, why:p.why,
+               ease:p.ease, impact:p.impact,
+               matrixX: dotPositions[i] ? Math.round(dotPositions[i].x) : null,
+               matrixY: dotPositions[i] ? Math.round(dotPositions[i].y) : null };
+    }),
+    commits: commits
+  };
+
+  fetch(SHEETS_URL, {
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+
+  document.getElementById('form-screen').style.display = 'none';
+  document.getElementById('success-screen').classList.add('visible');
+  document.getElementById('s-name').textContent = 'Thanks, ' + lead + '. Team locked in.';
+
+  var commitHTML = '';
+  commits.forEach(function(c, i) {
+    commitHTML += '<div style="margin-bottom:14px;">';
+    commitHTML += '<strong style="color:' + DOT_COLORS[i % DOT_COLORS.length] + ';">' + (c.processName || 'Process') + '</strong>';
+    commitHTML += ' — built by ' + (c.owner || 'TBD');
+    if (c.done) commitHTML += '<br><span style="opacity:0.7;font-size:14px;">“' + c.done + '”</span>';
+    commitHTML += '</div>';
+  });
+  document.getElementById('s-commit').innerHTML = commitHTML || '<em style="opacity:0.5">No processes committed.</em>';
+}
+</script>
+</body>
+</html>

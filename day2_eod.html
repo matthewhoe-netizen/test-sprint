@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>End of Sprint Form — Claude Transformation Sprint</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:#0D0D0D; --accent:#FF5733; --dark:#1A1A2E; --bg:#F5F4F0;
+  --white:#fff; --grey:#999; --line:#E0DED8; --amber:#F0A500; --green:#1A9E5F;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--dark);}
+.progress-bar{height:4px;background:#333;}
+.progress-fill{height:100%;background:var(--green);transition:width 0.4s ease;width:0%;}
+.nav-inner{max-width:760px;margin:0 auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-title{color:var(--white);font-size:13px;}
+.nav-title span{color:var(--green);font-weight:700;}
+.nav-count{color:rgba(255,255,255,0.35);font-size:12px;}
+
+.container{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+
+.hero{padding:48px 0 32px;}
+.hero-tag{font-size:10px;letter-spacing:3px;color:var(--green);font-weight:700;margin-bottom:12px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.15;font-weight:normal;}
+.hero h1 em{font-style:italic;color:var(--grey);}
+.hero p{color:#666;font-size:14px;line-height:1.75;margin-top:14px;max-width:560px;}
+
+.section-header{display:flex;align-items:flex-start;gap:14px;margin:44px 0 20px;padding-top:20px;border-top:1px solid var(--line);}
+.section-num{background:var(--dark);color:var(--green);font-weight:700;font-size:12px;padding:5px 9px;border-radius:3px;flex-shrink:0;margin-top:3px;}
+.section-title{font-size:19px;font-weight:700;}
+.section-sub{font-size:12px;color:var(--grey);margin-top:3px;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--white);border:1px solid var(--line);border-radius:6px;padding:22px 26px;margin-bottom:8px;}
+.field-wrap label{display:block;font-size:9px;letter-spacing:2.5px;color:var(--grey);font-weight:700;margin-bottom:8px;}
+.field-wrap input{width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;padding:6px 0;font-size:15px;font-family:'DM Serif Display',serif;color:var(--ink);outline:none;transition:border-color 0.2s;}
+.field-wrap input:focus{border-bottom-color:var(--green);}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:6px;padding:20px 24px;margin-bottom:10px;transition:border-color 0.2s;}
+.card:focus-within{border-color:var(--green);}
+.card label{display:block;font-size:13.5px;color:var(--ink);line-height:1.55;margin-bottom:12px;}
+.card textarea{width:100%;border:none;border-top:1px solid #F0EEE8;padding-top:12px;font-size:14px;font-family:'DM Serif Display',serif;color:var(--ink);background:transparent;resize:vertical;outline:none;line-height:1.8;min-height:72px;}
+.card textarea::placeholder{color:#bbb;font-style:italic;}
+
+/* PILL SELECTOR */
+.pill-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.pill-btn{padding:8px 16px;border-radius:100px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;border:1.5px solid var(--line);background:var(--white);color:#777;cursor:pointer;transition:all 0.15s;}
+.pill-btn:hover:not(.active){border-color:#aaa;color:var(--ink);}
+.pill-btn.active{border-color:var(--green);background:var(--green);color:var(--white);}
+.pill-btn.active.amber{border-color:var(--amber);background:var(--amber);}
+.pill-btn.active.red{border-color:#E03010;background:#E03010;}
+
+/* RATING ROW */
+.rating-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.rating-end{font-size:11px;color:#bbb;}
+.rating-btn{width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;border:2px solid var(--line);background:var(--white);color:#aaa;transition:all 0.15s;}
+.rating-btn:hover:not(.active){border-color:#aaa;color:var(--ink);}
+.rating-btn.active{background:var(--green);border-color:var(--green);color:var(--white);}
+
+/* STAR RATING */
+.star-row{display:flex;gap:8px;margin-top:8px;}
+.star-btn{font-size:28px;cursor:pointer;opacity:0.25;transition:opacity 0.15s,transform 0.1s;background:none;border:none;padding:0;}
+.star-btn:hover,.star-btn.active{opacity:1;}
+.star-btn:active{transform:scale(1.2);}
+
+/* SUBMIT */
+.submit-area{margin-top:44px;text-align:center;}
+.submit-btn{background:var(--green);color:var(--white);border:none;border-radius:4px;padding:16px 52px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background 0.2s,transform 0.1s;}
+.submit-btn:hover{background:#148050;}
+.submit-btn:active{transform:scale(0.98);}
+
+/* SUCCESS */
+#success-screen{display:none;min-height:100vh;background:var(--ink);align-items:center;justify-content:center;padding:40px 24px;}
+#success-screen.visible{display:flex;}
+.success-card{max-width:580px;width:100%;}
+.success-header{background:var(--green);border-radius:6px 6px 0 0;padding:32px 40px 28px;}
+.success-tag{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.7);margin-bottom:10px;}
+.success-name{font-size:28px;color:var(--white);font-family:'DM Serif Display',serif;line-height:1.2;}
+.success-sub{font-size:14px;color:rgba(255,255,255,0.75);margin-top:10px;line-height:1.6;}
+.success-body{background:var(--dark);border-radius:0 0 6px 6px;padding:28px 40px;}
+.success-commit-tag{font-size:10px;letter-spacing:2.5px;color:var(--green);margin-bottom:12px;font-weight:700;}
+.success-commit-text{color:#F5F4F0;font-family:'DM Serif Display',serif;font-size:16px;line-height:1.85;font-style:italic;}
+
+@media(max-width:600px){
+  .info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="form-screen">
+  <div class="nav">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="nav-inner">
+      <div class="nav-title"><span>End of Sprint</span> · Day 2</div>
+      <div class="nav-count" id="count">0% complete</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-tag">DAY 2 EOD · PERSONAL REFLECTION · SUBMIT BY 18:30</div>
+      <h1>You Made It.<br><em>Now Reflect.</em></h1>
+      <p>Two days of focused work — take 10 minutes to capture what you built, what it changed for you personally, and what you're committing to next. This is your record, not just the team's.</p>
+    </div>
+
+    <!-- S1: PERSONAL INFO -->
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div><div class="section-title">Your Info</div></div>
+    </div>
+    <div class="info-grid">
+      <div class="field-wrap">
+        <label>YOUR NAME</label>
+        <input type="text" id="f-name" placeholder="Full name" oninput="updateProgress()"/>
+      </div>
+      <div class="field-wrap">
+        <label>TEAM / DEPARTMENT</label>
+        <input type="text" id="f-team" placeholder="e.g. SPX Last Mile, WH Inventory" oninput="updateProgress()"/>
+      </div>
+    </div>
+
+    <!-- S2: WHAT YOUR TEAM BUILT -->
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="section-title">What Your Team Built</div>
+        <div class="section-sub">From your perspective — what actually got built over these 2 days.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>What is the final workflow your team built? Describe it in plain English — what problem does it solve, what goes in, what comes out?</label>
+      <textarea id="q-built" rows="4" placeholder="e.g. We built a Claude workflow that takes our weekly exception report CSV, identifies the top 10 anomalies, and drafts a summary email ready to send. What used to take 2 hours now takes 5 minutes..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Did the workflow work during the showcase?</label>
+      <div class="pill-group" id="demo-pills">
+        <button type="button" class="pill-btn" data-val="Yes, worked perfectly">Yes, worked perfectly ✓</button>
+        <button type="button" class="pill-btn" data-val="Yes, with some issues">Yes, with some issues</button>
+        <button type="button" class="pill-btn" data-val="Partially working">Partially working</button>
+        <button type="button" class="pill-btn" data-val="Still in progress">Still in progress</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>What was your personal contribution to the build?</label>
+      <textarea id="q-contribution" rows="2" placeholder="e.g. I wrote the core prompt, tested edge cases, documented the workflow for the team..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Roughly how many hours per week will this save your team once it's running?</label>
+      <div class="pill-group" id="hours-pills">
+        <button type="button" class="pill-btn" data-val="Less than 1 hr">Less than 1 hr</button>
+        <button type="button" class="pill-btn" data-val="1-3 hrs">1–3 hrs</button>
+        <button type="button" class="pill-btn" data-val="3-5 hrs">3–5 hrs</button>
+        <button type="button" class="pill-btn" data-val="5-10 hrs">5–10 hrs</button>
+        <button type="button" class="pill-btn" data-val="10+ hrs">10+ hrs</button>
+      </div>
+    </div>
+
+    <!-- S3: PERSONAL IMPACT -->
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div>
+        <div class="section-title">Personal Impact</div>
+        <div class="section-sub">How this sprint changed how you think about your work.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Before this sprint, how would you describe your confidence using Claude for real work tasks?</label>
+      <div class="pill-group" id="before-pills">
+        <button type="button" class="pill-btn" data-val="Never used it">Never used it</button>
+        <button type="button" class="pill-btn" data-val="Used it occasionally">Used it occasionally</button>
+        <button type="button" class="pill-btn" data-val="Used it regularly">Used it regularly</button>
+        <button type="button" class="pill-btn" data-val="Power user">Power user</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>After this sprint, how confident are you using Claude for your day-to-day work?</label>
+      <div class="rating-row">
+        <span class="rating-end">Not confident</span>
+        <button type="button" class="rating-btn" data-val="1" onclick="setRating('conf-after',1)">1</button>
+        <button type="button" class="rating-btn" data-val="2" onclick="setRating('conf-after',2)">2</button>
+        <button type="button" class="rating-btn" data-val="3" onclick="setRating('conf-after',3)">3</button>
+        <button type="button" class="rating-btn" data-val="4" onclick="setRating('conf-after',4)">4</button>
+        <button type="button" class="rating-btn" data-val="5" onclick="setRating('conf-after',5)">5</button>
+        <span class="rating-end">Very confident</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>What surprised you most about working with Claude over these 2 days?</label>
+      <textarea id="q-surprise" rows="2" placeholder="e.g. How well it handled ambiguous instructions, how fast iteration was, where it struggled..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>Is the quality of Claude's output better, the same, or worse than what a human would produce manually?</label>
+      <div class="pill-group" id="quality-pills">
+        <button type="button" class="pill-btn" data-val="Better">Better</button>
+        <button type="button" class="pill-btn" data-val="About the same">About the same</button>
+        <button type="button" class="pill-btn" data-val="Worse, but faster">Worse, but faster</button>
+        <button type="button" class="pill-btn" data-val="Depends on the task">Depends on the task</button>
+      </div>
+    </div>
+
+    <!-- S4: YOUR PERSONAL COMMITMENT -->
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div>
+        <div class="section-title">Your Personal Commitment</div>
+        <div class="section-sub">Not the team's — yours. What are you personally going to do differently?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Name one specific task in your week that you will use Claude for starting next Monday.</label>
+      <textarea id="q-commit" rows="2" placeholder="Be specific — not 'use Claude more' but 'use Claude to draft my weekly ops update every Monday morning'..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="card">
+      <label>When will your team's workflow be live and in regular use?</label>
+      <div class="pill-group" id="rollout-pills">
+        <button type="button" class="pill-btn" data-val="Already using it">Already using it</button>
+        <button type="button" class="pill-btn" data-val="This week">This week</button>
+        <button type="button" class="pill-btn" data-val="Within 2 weeks">Within 2 weeks</button>
+        <button type="button" class="pill-btn" data-val="Within a month">Within a month</button>
+        <button type="button" class="pill-btn" data-val="Not sure yet">Not sure yet</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Who else in Shopee — other teams, functions — could benefit from what your team built?</label>
+      <textarea id="q-spread" rows="2" placeholder="e.g. The SPX ops report workflow could easily be adapted for WH teams doing similar weekly reviews..."></textarea>
+    </div>
+
+    <!-- S5: SPRINT REFLECTION -->
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div>
+        <div class="section-title">Sprint Reflection</div>
+        <div class="section-sub">Quick and honest. Takes 2 minutes.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Overall sprint rating — how valuable was this for you personally?</label>
+      <div class="star-row" id="star-row">
+        <button type="button" class="star-btn" data-val="1" onclick="setStar(1)">⭐</button>
+        <button type="button" class="star-btn" data-val="2" onclick="setStar(2)">⭐</button>
+        <button type="button" class="star-btn" data-val="3" onclick="setStar(3)">⭐</button>
+        <button type="button" class="star-btn" data-val="4" onclick="setStar(4)">⭐</button>
+        <button type="button" class="star-btn" data-val="5" onclick="setStar(5)">⭐</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>One thing you'd do differently if you did this sprint again.</label>
+      <textarea id="q-differently" rows="2" placeholder="e.g. Spend more time on prompt design before building, pick a simpler process to start with..."></textarea>
+    </div>
+
+    <div class="card">
+      <label>Any other feedback on the sprint format, content, or facilitation?</label>
+      <textarea id="q-feedback" rows="2" placeholder="Honest feedback only — what worked, what didn't, what you'd change..."></textarea>
+    </div>
+
+    <div class="submit-area">
+      <button type="button" class="submit-btn" onclick="handleSubmit()">SUBMIT &#x2192;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div class="success-card">
+    <div class="success-header">
+      <div class="success-tag">SUBMITTED ✓ · SPRINT COMPLETE</div>
+      <div class="success-name" id="s-name">You did it.</div>
+      <div class="success-sub">Two days. Real work. Something that didn't exist before.<br>Now make sure it's still running two weeks from now.</div>
+    </div>
+    <div class="success-body">
+      <div class="success-commit-tag">YOUR COMMITMENT</div>
+      <div class="success-commit-text" id="s-commit"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHEETS_URL = 'https://script.google.com/a/macros/shopee.com/s/AKfycbzRcAnDjVdRUv4Fzvbcd_T78NUFbRUyz_4dIBZmCKZp5wk5u1pi9TZTjOddWrUF1Zj-Sg/exec';
+
+var ratings = { 'conf-after': null };
+var starVal  = null;
+var pillVals = {
+  'demo-pills':    null,
+  'hours-pills':   null,
+  'before-pills':  null,
+  'quality-pills': null,
+  'rollout-pills': null
+};
+
+// Wire up pill groups
+Object.keys(pillVals).forEach(function(groupId) {
+  var group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.pill-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      group.querySelectorAll('.pill-btn').forEach(function(b) {
+        b.classList.remove('active','amber','red');
+      });
+      btn.classList.add('active');
+      pillVals[groupId] = btn.dataset.val;
+      updateProgress();
+    });
+  });
+});
+
+function setRating(key, val) {
+  ratings[key] = val;
+  var btns = document.querySelectorAll('[onclick^="setRating(\'' + key + '\'"]');
+  // simpler: find by data-val within the rating-row siblings
+  document.querySelectorAll('.rating-btn').forEach(function(btn) {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(key) > -1) {
+      btn.classList.toggle('active', parseInt(btn.dataset.val) === val);
+    }
+  });
+  updateProgress();
+}
+
+function setStar(val) {
+  starVal = val;
+  document.querySelectorAll('.star-btn').forEach(function(btn) {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  var score = 0;
+  if ((document.getElementById('f-name').value       || '').trim()) score++;
+  if ((document.getElementById('f-team').value       || '').trim()) score++;
+  if ((document.getElementById('q-built').value      || '').trim()) score++;
+  if ((document.getElementById('q-contribution').value || '').trim()) score++;
+  if ((document.getElementById('q-surprise').value   || '').trim()) score++;
+  if ((document.getElementById('q-commit').value     || '').trim()) score++;
+  if (pillVals['demo-pills'])    score++;
+  if (pillVals['hours-pills'])   score++;
+  if (pillVals['before-pills'])  score++;
+  if (pillVals['quality-pills']) score++;
+  if (pillVals['rollout-pills']) score++;
+  if (ratings['conf-after'])     score++;
+  if (starVal)                   score++;
+  var pct = Math.round(score / 13 * 100);
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('count').textContent = pct + '% complete';
+}
+
+function handleSubmit() {
+  var name   = document.getElementById('f-name').value || 'Participant';
+  var commit = document.getElementById('q-commit').value || '';
+
+  var payload = {
+    name:           document.getElementById('f-name').value,
+    team:           document.getElementById('f-team').value,
+    built:          document.getElementById('q-built').value,
+    demoStatus:     pillVals['demo-pills']   || '',
+    contribution:   document.getElementById('q-contribution').value,
+    hoursSaved:     pillVals['hours-pills']  || '',
+    beforeConfidence: pillVals['before-pills'] || '',
+    afterConfidence:  ratings['conf-after']  || '',
+    surprise:       document.getElementById('q-surprise').value,
+    quality:        pillVals['quality-pills'] || '',
+    personalCommit: commit,
+    rolloutTimeline: pillVals['rollout-pills'] || '',
+    spread:         document.getElementById('q-spread').value,
+    sprintRating:   starVal || '',
+    differently:    document.getElementById('q-differently').value,
+    feedback:       document.getElementById('q-feedback').value
+  };
+
+  fetch(SHEETS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function() {});
+
+  document.getElementById('form-screen').style.display = 'none';
+  document.getElementById('success-screen').classList.add('visible');
+  document.getElementById('s-name').textContent = 'You did it, ' + name + '.';
+  document.getElementById('s-commit').innerHTML = commit
+    ? ('\u201C' + commit + '\u201D')
+    : '<em style="opacity:0.4">Go make it happen.</em>';
+}
+</script>
+</body>
+</html>
