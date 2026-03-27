@@ -431,28 +431,10 @@ function handleSubmit() {
   var team = document.getElementById('f-team').value || 'Unknown Team';
   var qf   = document.getElementById('q-final').value;
 
-  fetch('https://script.google.com/a/macros/shopee.com/s/AKfycbxBJMq8e56Y_jy8_8sEUD91zQCcOjOuttnUCcyBo14oTRWZWtiyIfJkNhI98aSpaawz/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+  fetch('https://script.google.com/a/macros/shopee.com/s/AKfycbxBJMq8e56Y_jy8_8sEUD91zQCcOjOuttnUCcyBo14oTRWZWtiyIfJkNhI98aSpaawz/exec', { method: 'POST', mode: 'no-cors', body: objToForm({
       name:     name,
       team:     team,
-      q1:       document.getElementById('q1').value,
-      q2:       document.getElementById('q2').value,
-      q3:       document.getElementById('q3').value,
-      audit_0:  auditAnswers[0] || '',
-      audit_1:  auditAnswers[1] || '',
-      audit_2:  auditAnswers[2] || '',
-      audit_3:  auditAnswers[3] || '',
-      audit_4:  auditAnswers[4] || '',
-      audit_5:  auditAnswers[5] || '',
-      rating_0: ratingAnswers[0] || '',
-      rating_1: ratingAnswers[1] || '',
-      rating_2: ratingAnswers[2] || '',
-      rating_3: ratingAnswers[3] || '',
-      qFinal:   qf
-    })
+      q1:       document.getElementById('q1') })
   }).catch(function() {});
 
   document.getElementById('form-screen').style.display = 'none';
@@ -463,6 +445,12 @@ function handleSubmit() {
     document.getElementById('intention-text').innerHTML = '<em>"' + qf + '"</em>';
     document.getElementById('intention-box').style.display = 'block';
   }
+}
+
+function objToForm(obj) {
+  var fd = new FormData();
+  fd.append('data', JSON.stringify(obj));
+  return fd;
 }
 </script>
 </body>

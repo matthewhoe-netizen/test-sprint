@@ -383,11 +383,7 @@ function handleSubmit() {
     feedback:       document.getElementById('q-feedback').value
   };
 
-  fetch(SHEETS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(function() {});
+  fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: objToForm(payload) }).catch(function() {});
 
   document.getElementById('form-screen').style.display = 'none';
   document.getElementById('success-screen').classList.add('visible');
@@ -395,6 +391,12 @@ function handleSubmit() {
   document.getElementById('s-commit').innerHTML = commit
     ? ('\u201C' + commit + '\u201D')
     : '<em style="opacity:0.4">Go make it happen.</em>';
+}
+
+function objToForm(obj) {
+  var fd = new FormData();
+  fd.append('data', JSON.stringify(obj));
+  return fd;
 }
 </script>
 </body>

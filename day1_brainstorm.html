@@ -595,11 +595,7 @@ function handleSubmit() {
     commits: commits
   };
 
-  fetch(SHEETS_URL, {
-    method:'POST', mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  }).catch(function(){});
+  fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: objToForm(payload) }).catch(function(){});
 
   document.getElementById('form-screen').style.display = 'none';
   document.getElementById('success-screen').classList.add('visible');
@@ -614,6 +610,12 @@ function handleSubmit() {
     commitHTML += '</div>';
   });
   document.getElementById('s-commit').innerHTML = commitHTML || '<em style="opacity:0.5">No processes committed.</em>';
+}
+
+function objToForm(obj) {
+  var fd = new FormData();
+  fd.append('data', JSON.stringify(obj));
+  return fd;
 }
 </script>
 </body>
