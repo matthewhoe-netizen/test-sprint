@@ -383,7 +383,7 @@ function handleSubmit() {
     feedback:       document.getElementById('q-feedback').value
   };
 
-  fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: objToForm(payload) }).catch(function() {});
+  submitToSheet('https://script.google.com/a/macros/shopee.com/s/AKfycbzRcAnDjVdRUv4Fzvbcd_T78NUFbRUyz_4dIBZmCKZp5wk5u1pi9TZTjOddWrUF1Zj-Sg/exec', { name: document.getElementById('f-name').value, team: document.getElementById('f-team').value, built: document.getElementById('q-built').value, demoStatus: pillVals['demo-pills']||'', contribution: document.getElementById('q-contribution').value, hoursSaved: pillVals['hours-pills']||'', beforeConfidence: pillVals['before-pills']||'', afterConfidence: ratings['conf-after']||'', surprise: document.getElementById('q-surprise').value, quality: pillVals['quality-pills']||'', personalCommit: document.getElementById('q-commit').value, rolloutTimeline: pillVals['rollout-pills']||'', spread: document.getElementById('q-spread').value, sprintRating: starVal||'', differently: document.getElementById('q-differently').value, feedback: document.getElementById('q-feedback').value });
 
   document.getElementById('form-screen').style.display = 'none';
   document.getElementById('success-screen').classList.add('visible');
@@ -393,11 +393,15 @@ function handleSubmit() {
     : '<em style="opacity:0.4">Go make it happen.</em>';
 }
 
-function objToForm(obj) {
-  var fd = new FormData();
-  fd.append('data', JSON.stringify(obj));
-  return fd;
+
+function submitToSheet(url, data) {
+  var params = Object.keys(data).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k] || '');
+  }).join('&');
+  var img = new Image();
+  img.src = url + '?' + params;
 }
+
 </script>
 </body>
 </html>

@@ -327,7 +327,7 @@ function handleSubmit() {
     needHelp:    document.getElementById('q-help').value
   };
 
-  fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: objToForm(payload) }).catch(function() {});
+  submitToSheet('https://script.google.com/a/macros/shopee.com/s/AKfycbxQjdQSg_gywsi5xEbn1ID5FOZDXVQNUvugJWR0OCToKpnz5u7Pwgwv1fAqUt3XQj7i/exec', { lead: document.getElementById('f-lead').value, team: document.getElementById('f-team').value, process: document.getElementById('q-process').value, progressPill: progressPill||'', built: document.getElementById('q-built').value, win: document.getElementById('q-win').value, blocker: document.getElementById('q-blocker').value, pivoted: pivotVal||'', pivotDetail: document.getElementById('q-pivot').value, confidence: confVal||'', plan: document.getElementById('q-plan').value, demoReady: document.getElementById('q-demo').value, needHelp: document.getElementById('q-help').value });
 
   document.getElementById('form-screen').style.display = 'none';
   document.getElementById('success-screen').classList.add('visible');
@@ -337,11 +337,15 @@ function handleSubmit() {
     : '<em style="opacity:0.4">No plan submitted.</em>';
 }
 
-function objToForm(obj) {
-  var fd = new FormData();
-  fd.append('data', JSON.stringify(obj));
-  return fd;
+
+function submitToSheet(url, data) {
+  var params = Object.keys(data).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k] || '');
+  }).join('&');
+  var img = new Image();
+  img.src = url + '?' + params;
 }
+
 </script>
 </body>
 </html>
