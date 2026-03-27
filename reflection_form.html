@@ -337,110 +337,107 @@
 </div>
 
 <script>
-const AUDIT_ITEMS = [
+var AUDIT_ITEMS = [
   "Writing — emails, reports, updates, documentation",
   "Research & information gathering",
   "Data entry, formatting, copy-pasting",
   "Internal communication & meeting follow-ups",
   "Reviewing / proofreading others' work",
-  "Creating presentations or summaries",
+  "Creating presentations or summaries"
 ];
-const AUDIT_OPTIONS = ["<1 hr", "1–3 hrs", "3–5 hrs", "5–10 hrs", "10+ hrs"];
-
-const RATING_ITEMS = [
+var AUDIT_OPTIONS = ["<1 hr", "1–3 hrs", "3–5 hrs", "5–10 hrs", "10+ hrs"];
+var RATING_ITEMS = [
   "My team spends significant time on tasks that feel repetitive or low-value.",
   "We have clear, consistent processes that could be described step-by-step.",
   "My team is open to trying new tools and changing how we work.",
-  "I can identify at least 2–3 processes that produce similar outputs every time.",
+  "I can identify at least 2–3 processes that produce similar outputs every time."
 ];
+var auditAnswers = {};
+var ratingAnswers = {};
 
-const auditAnswers = {};
-const ratingAnswers = {};
-
-// Build audit rows
-const auditContainer = document.getElementById('audit-rows');
-AUDIT_ITEMS.forEach((item, i) => {
-  const row = document.createElement('div');
+var auditContainer = document.getElementById('audit-rows');
+AUDIT_ITEMS.forEach(function(item, i) {
+  var row = document.createElement('div');
   row.className = 'audit-row';
-  const label = document.createElement('div');
-  label.className = 'audit-label';
-  label.textContent = item;
-  const opts = document.createElement('div');
+  var lbl = document.createElement('div');
+  lbl.className = 'audit-label';
+  lbl.textContent = item;
+  var opts = document.createElement('div');
   opts.className = 'audit-options';
-  AUDIT_OPTIONS.forEach(opt => {
-    const btn = document.createElement('button');
+  AUDIT_OPTIONS.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
     btn.textContent = opt;
-    btn.onclick = () => {
-      opts.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+    btn.onclick = function() {
+      opts.querySelectorAll('button').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
       auditAnswers[i] = opt;
       updateProgress();
     };
     opts.appendChild(btn);
   });
-  row.appendChild(label);
+  row.appendChild(lbl);
   row.appendChild(opts);
   auditContainer.appendChild(row);
 });
 
-// Build rating rows
-const ratingContainer = document.getElementById('rating-rows');
-RATING_ITEMS.forEach((item, i) => {
-  const row = document.createElement('div');
+var ratingContainer = document.getElementById('rating-rows');
+RATING_ITEMS.forEach(function(item, i) {
+  var row = document.createElement('div');
   row.className = 'rating-row';
-  const label = document.createElement('div');
-  label.className = 'rating-label';
-  label.textContent = item;
-  const scale = document.createElement('div');
+  var lbl = document.createElement('div');
+  lbl.className = 'rating-label';
+  lbl.textContent = item;
+  var scale = document.createElement('div');
   scale.className = 'rating-scale';
-  const lo = document.createElement('span'); lo.className = 'scale-end'; lo.textContent = 'disagree';
+  var lo = document.createElement('span');
+  lo.className = 'scale-end';
+  lo.textContent = 'disagree';
   scale.appendChild(lo);
-  [1,2,3,4,5].forEach(n => {
-    const btn = document.createElement('button');
+  [1,2,3,4,5].forEach(function(n) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
     btn.textContent = n;
-    btn.onclick = () => {
-      scale.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+    btn.onclick = function() {
+      scale.querySelectorAll('button').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
       ratingAnswers[i] = n;
       updateProgress();
     };
     scale.appendChild(btn);
   });
-  const hi = document.createElement('span'); hi.className = 'scale-end'; hi.textContent = 'agree';
+  var hi = document.createElement('span');
+  hi.className = 'scale-end';
+  hi.textContent = 'agree';
   scale.appendChild(hi);
-  row.appendChild(label);
+  row.appendChild(lbl);
   row.appendChild(scale);
   ratingContainer.appendChild(row);
 });
 
 function updateProgress() {
-  const textFields = ['q1','q2','q3','q-final'].filter(id => document.getElementById(id).value.trim()).length;
-  const auditFilled = Object.keys(auditAnswers).length;
-  const ratingFilled = Object.keys(ratingAnswers).length;
-  const total = 4 + 6 + 4;
-  const filled = textFields + auditFilled + ratingFilled;
-  const pct = Math.round((filled / total) * 100);
+  var tf = ['q1','q2','q3','q-final'].filter(function(id) {
+    return document.getElementById(id).value.trim();
+  }).length;
+  var af = Object.keys(auditAnswers).length;
+  var rf = Object.keys(ratingAnswers).length;
+  var pct = Math.round((tf + af + rf) / 14 * 100);
   document.getElementById('progress').style.width = pct + '%';
-  document.getElementById('count').textContent = filled + ' / ' + total + ' answered';
+  document.getElementById('count').textContent = (tf+af+rf) + ' / 14 answered';
 }
 
+function handleSubmit() {
+  var name = document.getElementById('f-name').value || 'Team Lead';
+  var team = document.getElementById('f-team').value || 'Unknown Team';
+  var qf   = document.getElementById('q-final').value;
 
-
-async function handleSubmit() {
-  const SHEETS_URL = 'https://script.google.com/a/macros/shopee.com/s/AKfycbxBJMq8e56Y_jy8_8sEUD91zQCcOjOuttnUCcyBo14oTRWZWtiyIfJkNhI98aSpaawz/exec';
-
-  const name = document.getElementById('f-name').value || 'Team Lead';
-  const team = document.getElementById('f-team').value || 'Unknown Team';
-  const qf   = document.getElementById('q-final').value;
-
-  // POST to Google Sheets (fire and forget)
-  fetch(SHEETS_URL, {
+  fetch('https://script.google.com/a/macros/shopee.com/s/AKfycbxBJMq8e56Y_jy8_8sEUD91zQCcOjOuttnUCcyBo14oTRWZWtiyIfJkNhI98aSpaawz/exec', {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name,
-      team,
+      name:     name,
+      team:     team,
       q1:       document.getElementById('q1').value,
       q2:       document.getElementById('q2').value,
       q3:       document.getElementById('q3').value,
@@ -454,112 +451,19 @@ async function handleSubmit() {
       rating_1: ratingAnswers[1] || '',
       rating_2: ratingAnswers[2] || '',
       rating_3: ratingAnswers[3] || '',
-      qFinal:   qf,
-    }),
-  }).catch(() => {});
+      qFinal:   qf
+    })
+  }).catch(function() {});
 
-  // Show success screen
   document.getElementById('form-screen').style.display = 'none';
-  const ss = document.getElementById('success-screen');
-  ss.classList.add('visible');
+  document.getElementById('success-screen').classList.add('visible');
   document.getElementById('s-name').textContent = 'Thanks, ' + name + '. Your response is recorded.';
 
-  // Show intention
   if (qf) {
     document.getElementById('intention-text').innerHTML = '<em>"' + qf + '"</em>';
     document.getElementById('intention-box').style.display = 'block';
   }
-
 }
-
-const AUDIT_ITEMS = [
-  "Writing — emails, reports, updates, documentation",
-  "Research & information gathering",
-  "Data entry, formatting, copy-pasting",
-  "Internal communication & meeting follow-ups",
-  "Reviewing / proofreading others' work",
-  "Creating presentations or summaries",
-];
-const AUDIT_OPTIONS = ["<1 hr", "1–3 hrs", "3–5 hrs", "5–10 hrs", "10+ hrs"];
-
-const RATING_ITEMS = [
-  "My team spends significant time on tasks that feel repetitive or low-value.",
-  "We have clear, consistent processes that could be described step-by-step.",
-  "My team is open to trying new tools and changing how we work.",
-  "I can identify at least 2–3 processes that produce similar outputs every time.",
-];
-
-const auditAnswers = {};
-const ratingAnswers = {};
-
-// Build audit rows
-const auditContainer = document.getElementById('audit-rows');
-AUDIT_ITEMS.forEach((item, i) => {
-  const row = document.createElement('div');
-  row.className = 'audit-row';
-  const label = document.createElement('div');
-  label.className = 'audit-label';
-  label.textContent = item;
-  const opts = document.createElement('div');
-  opts.className = 'audit-options';
-  AUDIT_OPTIONS.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.onclick = () => {
-      opts.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      auditAnswers[i] = opt;
-      updateProgress();
-    };
-    opts.appendChild(btn);
-  });
-  row.appendChild(label);
-  row.appendChild(opts);
-  auditContainer.appendChild(row);
-});
-
-// Build rating rows
-const ratingContainer = document.getElementById('rating-rows');
-RATING_ITEMS.forEach((item, i) => {
-  const row = document.createElement('div');
-  row.className = 'rating-row';
-  const label = document.createElement('div');
-  label.className = 'rating-label';
-  label.textContent = item;
-  const scale = document.createElement('div');
-  scale.className = 'rating-scale';
-  const lo = document.createElement('span'); lo.className = 'scale-end'; lo.textContent = 'disagree';
-  scale.appendChild(lo);
-  [1,2,3,4,5].forEach(n => {
-    const btn = document.createElement('button');
-    btn.textContent = n;
-    btn.onclick = () => {
-      scale.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      ratingAnswers[i] = n;
-      updateProgress();
-    };
-    scale.appendChild(btn);
-  });
-  const hi = document.createElement('span'); hi.className = 'scale-end'; hi.textContent = 'agree';
-  scale.appendChild(hi);
-  row.appendChild(label);
-  row.appendChild(scale);
-  ratingContainer.appendChild(row);
-});
-
-function updateProgress() {
-  const textFields = ['q1','q2','q3','q-final'].filter(id => document.getElementById(id).value.trim()).length;
-  const auditFilled = Object.keys(auditAnswers).length;
-  const ratingFilled = Object.keys(ratingAnswers).length;
-  const total = 4 + 6 + 4;
-  const filled = textFields + auditFilled + ratingFilled;
-  const pct = Math.round((filled / total) * 100);
-  document.getElementById('progress').style.width = pct + '%';
-  document.getElementById('count').textContent = filled + ' / ' + total + ' answered';
-}
-
-
 </script>
 </body>
 </html>
