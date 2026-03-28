@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Claude Transformation Sprint//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:smart-platform-training-20260401@shopee.com
+DTSTART:20260401T090000Z
+DTEND:20260401T103000Z
+SUMMARY:[BPM Workshop] Utilising SMART to Build AI Solutions
+DESCRIPTION:Join Zoom Meeting\nhttps://seagroup.zoom.us/j/2795657091\nMeeting ID: 279 565 7091\n\nThis session is a 1.5h introduction to the SMART platform\, hosted by Winar.\n\nOptional if you have attended previous trainings or are already competent with SMART.\n\nPre-requisite: Access to SMART (https://smart.shopee.io/apps?tab=workspace). If you don't have access yet\, DM Winar.\n\nBring: Laptop & charger\n\nAgenda:\n1. Introduction to AI Agents\n2. AI Project Showcase\n3. Introduction to SMART Platform\n4. Agent Prompts and Prompting 101\n5. Knowledge Base & Tools\n6. Hands-on\n7. Agent Release\n8. Other Orchestration Modes\n\nSMART Platform Documentation:\nhttps://confluence.shopee.io/x/aa15ow
+LOCATION:SG-5SPD-3F-A-Jakarta (16) [VC] / SG-5SPD-5F-16-Manila (16) [VC] / Zoom: https://seagroup.zoom.us/j/2795657091
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
